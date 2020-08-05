@@ -1,0 +1,221 @@
+package repository
+
+import (
+	"os"
+	"context"
+	"time"
+	"log"
+	"fmt"
+	"strconv"
+	"github.com/joho/godotenv"
+    "go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/mongo"
+    "go.mongodb.org/mongo-driver/mongo/options"
+    "go.mongodb.org/mongo-driver/mongo/readpref"
+	"github.com/myrachanto/asokomonolith/httperrors"
+	"github.com/myrachanto/asokomonolith/model" 
+)
+var (
+	Mongorepository mongorepository = mongorepository{}
+	ctx = context.TODO()
+)
+
+type mongorepository struct{
+	client *mongo.Client
+	database string
+	timeout time.Duration
+}
+
+type Redirectrepository interface{
+	Create(category *model.Category) (*httperrors.HttpError)
+	GetOne(id string) (*model.Category, *httperrors.HttpError)
+	GetAll(categorys []model.Category) ([]model.Category, *httperrors.HttpError)
+	Update(id string, category *model.Category) (*httperrors.HttpError)
+	Delete(id string) (*httperrors.HttpSuccess, *httperrors.HttpError)
+}
+func Mongoclient()(*mongo.Client, *httperrors.HttpError){
+	err7 := godotenv.Load()
+	if err7 != nil {
+		return nil, httperrors.NewBadRequestError("error loading env file")
+	}
+	host := os.Getenv("Mongohost")
+	clientOptions := options.Client().ApplyURI(host)
+	client, err6 := mongo.Connect(ctx, clientOptions)
+		if err6 != nil {
+		return nil, httperrors.NewBadRequestError("Could not connect to mongodb")
+	}
+	err8 := client.Ping(ctx, nil)
+	if err8 != nil {
+		log.Fatal(err8)
+	}
+	return client, nil
+}
+func Mongodb()(*mongo.Database, *httperrors.HttpError){
+	err7 := godotenv.Load()
+	if err7 != nil {
+		return nil, httperrors.NewBadRequestError("error loading env file")
+	}
+	mongodb := os.Getenv("MongodbName")
+	client, err1 := newMongoClient()
+	db := client.Database(mongodb)
+	return db, err1
+}
+func DbClose(client *mongo.Client){
+	err := client.Disconnect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Connection to MongoDB closed.")
+}
+func newMongoClient()(*mongo.Client, *httperrors.HttpError){
+	err := godotenv.Load()
+	if err != nil {
+		return nil, httperrors.NewBadRequestError("error loading env file")
+	}
+	host := os.Getenv("Mongohost")
+	timo := os.Getenv("Duration")
+	mongotimeout, err := strconv.Atoi(timo)
+	if err != nil {
+		return nil, httperrors.NewBadRequestError("Could not get timeout")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(mongotimeout)*time.Second)
+	 defer cancel()
+	 client, err := mongo.Connect(ctx, options.Client().ApplyURI(host))
+	 if err != nil {
+		return nil, httperrors.NewBadRequestError("Could not connect to mongodb")
+	}
+	err = client.Ping(ctx, readpref.Primary()) 
+	if err != nil {
+		return nil, httperrors.NewBadRequestError("Could not get a ping connect to mongodb")
+	}
+	return client, nil
+}
+func (r *mongorepository)NewMongoRepository()(*mongorepository, *httperrors.HttpError){
+	err := godotenv.Load()
+	if err != nil {
+		return nil, httperrors.NewBadRequestError("error loading env file")
+	}
+	mongodb := os.Getenv("MongodbName")
+	timo := os.Getenv("Duration")
+	mongotimeout, err := strconv.Atoi(timo)
+	if err != nil {
+		return nil, httperrors.NewBadRequestError("Could not get timeout")
+	}
+	repo := &mongorepository{
+		timeout: time.Duration(mongotimeout) * time.Second,
+		database:mongodb,
+	}
+	client, err1 := newMongoClient()
+	if err1 != nil {
+		return nil, httperrors.NewBadRequestError("Could not get a connection to mongodb")
+	}
+	repo.client = client
+	return repo, nil
+}
+func (r *mongorepository) Create(category *model.Category) (*httperrors.HttpError) {
+	if err1 := category.Validate(); err1 != nil {
+		return err1
+	}
+	c, t := Mongoclient();if t != nil {
+		return t
+	}
+	db, e := Mongodb();if e != nil {
+		return e
+	}
+	collection := db.Collection("category")
+	_, err := collection.InsertOne(ctx, category)
+		if err != nil {
+			return httperrors.NewBadRequestError(fmt.Sprintf("Create category Failed, %d", err))
+	}
+	DbClose(c)
+	return nil
+}
+
+func (r *mongorepository) GetOne(id string) (category *model.Category, errors *httperrors.HttpError) {
+	c, t := Mongoclient();if t != nil {
+		return nil, t
+	}
+	db, e := Mongodb();if e != nil {
+		return nil, e
+	}
+	collection := db.Collection("category")
+	filter := bson.M{"_id": id}
+	err := collection.FindOne(ctx, filter).Decode(&category)
+	if err != nil {
+		return nil, httperrors.NewBadRequestError(fmt.Sprintf("Could not find resource with this id, %d", err))
+	}
+	DbClose(c)
+	return category, nil	
+}
+
+func (r *mongorepository) GetAll(categorys []model.Category) ([]model.Category, *httperrors.HttpError) {
+	c, t := Mongoclient();if t != nil {
+		return nil, t
+	}
+	db, e := Mongodb();if e != nil {
+		return nil, e
+	}
+	collection := db.Collection("category")
+	filter := bson.M{}
+	cur, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, httperrors.NewBadRequestError(fmt.Sprintf("Could not find resource with this id, %d", err))
+	}
+	if err != nil { 
+		return nil,	httperrors.NewNotFoundError("no results found")
+	}
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+	err := cur.Decode(&categorys)
+		if err != nil { 
+			return nil,	httperrors.NewNotFoundError("Error while decoding results!")
+		}
+	// do something with result....
+	}
+	if err := cur.Err(); err != nil {
+		return nil,	httperrors.NewNotFoundError(fmt.Sprintf("Could not find resource with this id, %d", err))
+	}	
+	DbClose(c)
+    return categorys, nil
+
+}
+
+func (r *mongorepository) Update(id string, category *model.Category) (*httperrors.HttpError) {
+	ucategory := &model.Category{}
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout) 
+	defer cancel()
+	collection := r.client.Database(r.database).Collection("category")
+	filter := bson.M{"_id": id}
+	err := collection.FindOne(ctx, filter).Decode(&ucategory)
+	if err != nil {
+		return httperrors.NewBadRequestError(fmt.Sprintf("Could not find resource with this id, %d", err))
+	}
+	if category.Name  == "" {
+		category.Name = ucategory.Name
+	}
+	if category.Title  == "" {
+		category.Title = ucategory.Title
+	}
+
+	if category.Description  == "" {
+		category.Description = ucategory.Description
+	}
+	_, err = collection.UpdateOne(ctx, filter, category)
+	if err != nil {
+		return httperrors.NewBadRequestError(fmt.Sprintf("Update of category Failed, %d", err))
+	} 
+	return nil
+}
+func (r mongorepository) Delete(id string) (*httperrors.HttpSuccess, *httperrors.HttpError) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout) 
+	defer cancel()
+	collection := r.client.Database(r.database).Collection("category")
+	filter := bson.M{"_id": id}
+	ok, err := collection.DeleteOne(ctx, filter)
+	if ok == nil {
+		return nil, httperrors.NewNotFoundError(fmt.Sprintf("deletion of %d failed", err))
+	}else{
+		return httperrors.NewSuccessMessage("deleted successfully"), nil
+	}
+}
+

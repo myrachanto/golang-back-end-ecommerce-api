@@ -4,11 +4,11 @@ import(
 	//"fmt"	
 	"net/http"
 	"github.com/labstack/echo"
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model"
-	"github.com/myrachanto/asokomonolith/service"
+	"github.com/myrachanto/ecommerce/httperrors"
+	"github.com/myrachanto/ecommerce/model"
+	"github.com/myrachanto/ecommerce/service"
 )
- 
+ //ProductController ..
 var (
 	ProductController productController = productController{}
 )
@@ -16,10 +16,11 @@ type productController struct{ }
 /////////controllers/////////////////
 func (controller productController) Create(c echo.Context) error {
 	product := &model.Product{}
-	if err := c.Bind(product); err != nil {
-		httperror := httperrors.NewBadRequestError("Invalid json body")
-		return c.JSON(httperror.Code, httperror)
-	}	
+	
+	product.Name = c.FormValue("name")
+	product.Description = c.FormValue("description")
+	product.Title = c.FormValue("title")
+	product.Category = c.FormValue("category")
 	err1 := service.ProductService.Create(product)
 	if err1 != nil {
 		return c.JSON(err1.Code, err1)
@@ -28,8 +29,8 @@ func (controller productController) Create(c echo.Context) error {
 }
 
 func (controller productController) GetAll(c echo.Context) error {
-	products := []model.Product{}
-	products, err3 := service.ProductService.GetAll(products)
+	code := c.Param("code")
+	products, err3 := service.ProductService.GetAll(code)
 	if err3 != nil {
 		return c.JSON(err3.Code, err3)
 	}

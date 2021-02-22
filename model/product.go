@@ -1,14 +1,14 @@
 package model
 
-import "github.com/myrachanto/asokomonolith/httperrors"
+import "github.com/myrachanto/ecommerce/httperrors"
 
 type Product struct {
-	Id          string  `bson:"_id"`
-	Name        string  `bson:"name"`
-	Title       string  `bson:"title"`
-	Description string  `bson:"description"`
-	Majorcategory string
-	Category string
+	Name        string  `json:"name"`
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	Code       string  `json:"code"`
+	Majorcategory string  `json:"majorcat"`
+	Category string  `json:"category"`
 	Subcategory string
 	Price float64
 	Tag []Tag

@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model" 
-	r "github.com/myrachanto/asokomonolith/repository"
+	"github.com/myrachanto/ecommerce/httperrors"
+	"github.com/myrachanto/ecommerce/model" 
+	r "github.com/myrachanto/ecommerce/repository"
 )
 
 var (
@@ -24,13 +24,13 @@ func (service majorcategoryService) GetOne(id string) (*model.Majorcategory, *ht
 	return majorcategory, err1
 }
 
-func (service majorcategoryService) GetAll(majorcategorys []model.Majorcategory) ([]model.Majorcategory, *httperrors.HttpError) {
-	majorcategorys, err := r.Majorcategoryrepository.GetAll(majorcategorys)
+func (service majorcategoryService) GetAll() ([]*model.Majorcategory, *httperrors.HttpError) {
+	majorcategorys, err := r.Majorcategoryrepository.GetAll()
 	return majorcategorys, err
 }
 
-func (service majorcategoryService) Update(id string, majorcategory *model.Majorcategory) (*httperrors.HttpError) {
-	err1 := r.Majorcategoryrepository.Update(id, majorcategory)
+func (service majorcategoryService) Update(code string, majorcategory *model.Majorcategory) (*httperrors.HttpError) {
+	err1 := r.Majorcategoryrepository.Update(code, majorcategory)
 	return err1
 }
 func (service majorcategoryService) Delete(id string) (*httperrors.HttpSuccess, *httperrors.HttpError) {

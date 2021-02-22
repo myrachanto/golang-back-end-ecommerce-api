@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model" 
-	r "github.com/myrachanto/asokomonolith/repository"
+	"github.com/myrachanto/ecommerce/httperrors"
+	"github.com/myrachanto/ecommerce/model" 
+	r "github.com/myrachanto/ecommerce/repository"
 )
 
 var (

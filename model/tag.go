@@ -1,6 +1,6 @@
 package model
 
-import "github.com/myrachanto/asokomonolith/httperrors"
+import "github.com/myrachanto/ecommerce/httperrors"
 
 type Tag struct {
 	Id          string  `bson:"_id"`

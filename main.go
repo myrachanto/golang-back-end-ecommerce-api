@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/myrachanto/asokomonolith/routes"
+	"github.com/myrachanto/ecommerce/routes"
 )
 func main() {
  routes.ApiMicroservice()

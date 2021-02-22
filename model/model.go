@@ -1,11 +1,9 @@
 package model
 
-import(
-	"github.com/myrachanto/asokomonolith/httperrors"
-)
+
+import "github.com/myrachanto/ecommerce/httperrors"
 
 type Town struct {
-	Id string `bson:"_id"`
 	Name string `bson:"name"`
 	Title string `bson:"title"`
 	Description string `bson:"description"`

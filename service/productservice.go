@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model" 
-	r "github.com/myrachanto/asokomonolith/repository"
+	"github.com/myrachanto/ecommerce/httperrors"
+	"github.com/myrachanto/ecommerce/model" 
+	r "github.com/myrachanto/ecommerce/repository"
 )
 
 var (
@@ -23,8 +23,8 @@ func (service productService) GetOne(id string) (*model.Product, *httperrors.Htt
 	return product, err1
 }
 
-func (service productService) GetAll(products []model.Product) ([]model.Product, *httperrors.HttpError) {
-	products, err := r.Productrepository.GetAll(products)
+func (service productService) GetAll(code string) ([]*model.Product, *httperrors.HttpError) {
+	products, err := r.Productrepository.GetAll(code) 
 	return products, err
 }
 

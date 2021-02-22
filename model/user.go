@@ -5,7 +5,7 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/myrachanto/asokomonolith/httperrors"
+	"github.com/myrachanto/ecommerce/httperrors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -120,9 +120,9 @@ func (user User) Validate() *httperrors.HttpError {
 	if user.Email == "" {
 		return httperrors.NewNotFoundError("Invalid Email")
 	}
-	if user.Address == "" {
-		return httperrors.NewNotFoundError("Invalid Address")
-	}
+	// if user.Address == "" {
+	// 	return httperrors.NewNotFoundError("Invalid Address")
+	// }
 	if user.Password == "" {
 		return httperrors.NewNotFoundError("Invalid password")
 	}

@@ -4,11 +4,11 @@ import(
 	//"fmt"	
 	"net/http"
 	"github.com/labstack/echo"
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model"
-	"github.com/myrachanto/asokomonolith/service"
+	"github.com/myrachanto/ecommerce/httperrors"
+	"github.com/myrachanto/ecommerce/model"
+	"github.com/myrachanto/ecommerce/service"
 )
- 
+ //TagController ...
 var (
 	TagController tagController = tagController{}
 )

@@ -1,14 +1,15 @@
 package model
 
 import(
-	"github.com/myrachanto/asokomonolith/httperrors"
+	"github.com/myrachanto/ecommerce/httperrors"
 )
 
 type Category struct {
-	Id string `bson:"_id"`
-	Name string `bson:"name"`
-	Title string `bson:"title"`
-	Description string `bson:"description"`
+	Name string `json:"name"`
+	Title string `json:"title"`
+	Description string `json:"description"`
+	Majorcat string `json:"majorcat"`
+	Code string `json:"code"`
 	Base
 }
 func (category Category) Validate() *httperrors.HttpError{

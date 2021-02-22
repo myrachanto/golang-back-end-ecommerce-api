@@ -6,9 +6,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/myrachanto/asokomonolith/controllers"
+	"github.com/myrachanto/ecommerce/controllers"
 )
-
+// ApiMicroservice ...
 func ApiMicroservice() {
 
 	err := godotenv.Load()
@@ -24,7 +24,7 @@ func ApiMicroservice() {
 	e.Use(middleware.Recover()) 
 	e.Use(middleware.CORS())
 
-	JWTgroup := e.Group("/api/")
+	JWTgroup := e.Group("/api")
 	JWTgroup.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningMethod: "HS256",
 		SigningKey: []byte(key),
@@ -46,124 +46,117 @@ func ApiMicroservice() {
 	/////////////users//////////////////////////////////
 	e.POST("/register", controllers.UserController.Create)
 	e.POST("/login", controllers.UserController.Login)
-	e.GET("/logout", controllers.UserController.Logout)
-	e.GET("/users", controllers.UserController.GetAll)
-	e.GET("/users/:id", controllers.UserController.GetOne)
-	e.PUT("/users/:id", controllers.UserController.Update)
-	e.PUT("/usersA/:id", controllers.UserController.AUpdate)
-	e.DELETE("/users/:id", controllers.UserController.Delete)
+	JWTgroup.GET("/logout", controllers.UserController.Logout)
+	JWTgroup.GET("/users", controllers.UserController.GetAll)
+	JWTgroup.GET("/users/:id", controllers.UserController.GetOne)
+	JWTgroup.PUT("/users/:id", controllers.UserController.Update)
+	JWTgroup.PUT("/usersA/:id", controllers.UserController.AUpdate)
+	JWTgroup.DELETE("/users/:id", controllers.UserController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/categorys", controllers.CategoryController.Create)
-	e.GET("/categorys", controllers.CategoryController.GetAll)
-	e.GET("/categorys/:id", controllers.CategoryController.GetOne)
-	e.PUT("/categorys/:id", controllers.CategoryController.Update)
-	e.DELETE("/categorys/:id", controllers.CategoryController.Delete)
+	JWTgroup.POST("/categorys", controllers.CategoryController.Create)
+	JWTgroup.GET("/categorys", controllers.CategoryController.GetAll)
+	JWTgroup.GET("/categorys/:id", controllers.CategoryController.GetOne)
+	JWTgroup.PUT("/categorys/:id", controllers.CategoryController.Update)
+	JWTgroup.DELETE("/categorys/:id", controllers.CategoryController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/countys", controllers.CountyController.Create)
-	e.GET("/countys", controllers.CountyController.GetAll)
-	e.GET("/countys/:id", controllers.CountyController.GetOne)
-	e.PUT("/countys/:id", controllers.CountyController.Update)
-	e.DELETE("/countys/:id", controllers.CountyController.Delete)
+	JWTgroup.POST("/countys", controllers.CountyController.Create)
+	JWTgroup.GET("/countys", controllers.CountyController.GetAll)
+	JWTgroup.GET("/countys/:id", controllers.CountyController.GetOne)
+	JWTgroup.PUT("/countys/:id", controllers.CountyController.Update)
+	JWTgroup.DELETE("/countys/:id", controllers.CountyController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/customers", controllers.CustomerController.Create)
-	e.GET("/customers", controllers.CustomerController.GetAll)
-	e.GET("/customers/:id", controllers.CustomerController.GetOne)
-	e.PUT("/customers/:id", controllers.CustomerController.Update)
-	e.DELETE("/customers/:id", controllers.CustomerController.Delete)
+	JWTgroup.POST("/customers", controllers.CustomerController.Create)
+	JWTgroup.GET("/customers", controllers.CustomerController.GetAll)
+	JWTgroup.GET("/customers/:id", controllers.CustomerController.GetOne)
+	JWTgroup.PUT("/customers/:id", controllers.CustomerController.Update)
+	JWTgroup.DELETE("/customers/:id", controllers.CustomerController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/divisions", controllers.DivisionController.Create)
-	e.GET("/divisions", controllers.DivisionController.GetAll)
-	e.GET("/divisions/:id", controllers.DivisionController.GetOne)
-	e.PUT("/divisions/:id", controllers.DivisionController.Update)
-	e.DELETE("/divisions/:id", controllers.DivisionController.Delete)
+	JWTgroup.POST("/divisions", controllers.DivisionController.Create)
+	JWTgroup.GET("/divisions", controllers.DivisionController.GetAll)
+	JWTgroup.GET("/divisions/:id", controllers.DivisionController.GetOne)
+	JWTgroup.PUT("/divisions/:id", controllers.DivisionController.Update)
+	JWTgroup.DELETE("/divisions/:id", controllers.DivisionController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/industrys", controllers.IndustryController.Create)
-	e.GET("/industrys", controllers.IndustryController.GetAll)
-	e.GET("/industrys/:id", controllers.IndustryController.GetOne)
-	e.PUT("/industrys/:id", controllers.IndustryController.Update)
-	e.DELETE("/industrys/:id", controllers.IndustryController.Delete)
+	JWTgroup.POST("/industrys", controllers.IndustryController.Create)
+	JWTgroup.GET("/industrys", controllers.IndustryController.GetAll)
+	JWTgroup.GET("/industrys/:id", controllers.IndustryController.GetOne)
+	JWTgroup.PUT("/industrys/:id", controllers.IndustryController.Update)
+	JWTgroup.DELETE("/industrys/:id", controllers.IndustryController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/majorcategorys", controllers.MajorcategoryController.Create)
-	e.GET("/majorcategorys", controllers.MajorcategoryController.GetAll)
-	e.GET("/majorcategorys/:id", controllers.MajorcategoryController.GetOne)
-	e.PUT("/majorcategorys/:id", controllers.MajorcategoryController.Update)
-	e.DELETE("/majorcategorys/:id", controllers.MajorcategoryController.Delete)
+	JWTgroup.POST("/majorcategorys", controllers.MajorcategoryController.Create)
+	JWTgroup.GET("/majorcategorys", controllers.MajorcategoryController.GetAll)
+	JWTgroup.GET("/majorcategorys/:code", controllers.MajorcategoryController.GetOne)
+	JWTgroup.PUT("/majorcategorys/:code", controllers.MajorcategoryController.Update)
+	JWTgroup.DELETE("/majorcategorys/:code", controllers.MajorcategoryController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/streets", controllers.StreetController.Create)
-	e.GET("/streets", controllers.StreetController.GetAll)
-	e.GET("/streets/:id", controllers.StreetController.GetOne)
-	e.PUT("/streets/:id", controllers.StreetController.Update)
-	e.DELETE("/streets/:id", controllers.StreetController.Delete)
+	JWTgroup.POST("/subcategorys", controllers.SubcategoryController.Create)
+	JWTgroup.GET("/subcategorys", controllers.SubcategoryController.GetAll)
+	JWTgroup.GET("/subcategorys/:id", controllers.SubcategoryController.GetOne)
+	JWTgroup.PUT("/subcategorys/:id", controllers.SubcategoryController.Update)
+	JWTgroup.DELETE("/subcategorys/:id", controllers.SubcategoryController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////category//////////////////////////////////
-	e.POST("/subcategorys", controllers.SubcategoryController.Create)
-	e.GET("/subcategorys", controllers.SubcategoryController.GetAll)
-	e.GET("/subcategorys/:id", controllers.SubcategoryController.GetOne)
-	e.PUT("/subcategorys/:id", controllers.SubcategoryController.Update)
-	e.DELETE("/subcategorys/:id", controllers.SubcategoryController.Delete)
-	////////////////////////////////////////////////////////
-	/////////////category//////////////////////////////////
-	e.POST("/categorys", controllers.CategoryController.Create)
-	e.GET("/categorys", controllers.CategoryController.GetAll)
-	e.GET("/categorys/:id", controllers.CategoryController.GetOne)
-	e.PUT("/categorys/:id", controllers.CategoryController.Update)
-	e.DELETE("/categorys/:id", controllers.CategoryController.Delete)
+	JWTgroup.POST("/categorys", controllers.CategoryController.Create)
+	JWTgroup.GET("/categorys/major/:majorcode", controllers.CategoryController.GetAll)
+	JWTgroup.GET("/categorys/:code", controllers.CategoryController.GetOne)
+	JWTgroup.PUT("/categorys/:code", controllers.CategoryController.Update)
+	JWTgroup.DELETE("/categorys/:code", controllers.CategoryController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////town//////////////////////////////////
-	e.POST("/towns", controllers.TownController.Create)
-	e.GET("/towns", controllers.TownController.GetAll)
-	e.GET("/towns/:id", controllers.TownController.GetOne)
-	e.PUT("/towns/:id", controllers.TownController.Update)
-	e.DELETE("/towns/:id", controllers.TownController.Delete)
+	JWTgroup.POST("/towns", controllers.TownController.Create)
+	JWTgroup.GET("/towns", controllers.TownController.GetAll)
+	JWTgroup.GET("/towns/:id", controllers.TownController.GetOne)
+	JWTgroup.PUT("/towns/:id", controllers.TownController.Update)
+	JWTgroup.DELETE("/towns/:id", controllers.TownController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////Shop//////////////////////////////////
-	e.POST("/shops", controllers.ShopController.Create)
-	e.GET("/shops", controllers.ShopController.GetAll)
-	e.GET("/shops/:id", controllers.ShopController.GetOne)
-	e.PUT("/shops/:id", controllers.ShopController.Update)
-	e.DELETE("/shops/:id", controllers.ShopController.Delete)
+	JWTgroup.POST("/shops", controllers.ShopController.Create)
+	JWTgroup.GET("/shops", controllers.ShopController.GetAll)
+	JWTgroup.GET("/shops/:id", controllers.ShopController.GetOne)
+	JWTgroup.PUT("/shops/:id", controllers.ShopController.Update)
+	JWTgroup.DELETE("/shops/:id", controllers.ShopController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////products//////////////////////////////////
-	e.POST("/products", controllers.ProductController.Create)
-	e.GET("/products", controllers.ProductController.GetAll)
-	e.GET("/products/:id", controllers.ProductController.GetOne)
-	e.PUT("/products/:id", controllers.ProductController.Update)
-	e.DELETE("/products/:id", controllers.ProductController.Delete)
+	JWTgroup.POST("/products", controllers.ProductController.Create)
+	JWTgroup.GET("/products/view/:code", controllers.ProductController.GetAll)
+	JWTgroup.GET("/products/:id", controllers.ProductController.GetOne)
+	JWTgroup.PUT("/products/:id", controllers.ProductController.Update)
+	JWTgroup.DELETE("/products/:id", controllers.ProductController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////tags//////////////////////////////////
-	e.POST("/tags", controllers.TagController.Create)
-	e.GET("/tags", controllers.TagController.GetAll)
-	e.GET("/tags/:id", controllers.TagController.GetOne)
-	e.PUT("/tags/:id", controllers.TagController.Update)
-	e.DELETE("/tags/:id", controllers.TagController.Delete)
+	JWTgroup.POST("/tags", controllers.TagController.Create)
+	JWTgroup.GET("/tags", controllers.TagController.GetAll)
+	JWTgroup.GET("/tags/:id", controllers.TagController.GetOne)
+	JWTgroup.PUT("/tags/:id", controllers.TagController.Update)
+	JWTgroup.DELETE("/tags/:id", controllers.TagController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////ratings//////////////////////////////////
-	e.POST("/ratings", controllers.RatingController.Create)
-	e.GET("/ratings", controllers.RatingController.GetAll)
-	e.GET("/ratings/:id", controllers.RatingController.GetOne)
-	e.PUT("/ratings/:id", controllers.RatingController.Update)
-	e.DELETE("/ratings/:id", controllers.RatingController.Delete)
+	JWTgroup.POST("/ratings", controllers.RatingController.Create)
+	JWTgroup.GET("/ratings", controllers.RatingController.GetAll)
+	JWTgroup.GET("/ratings/:id", controllers.RatingController.GetOne)
+	JWTgroup.PUT("/ratings/:id", controllers.RatingController.Update)
+	JWTgroup.DELETE("/ratings/:id", controllers.RatingController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////nortificatrions//////////////////////////////////
-	e.POST("/nortificatrions", controllers.NortificationController.Create)
-	e.GET("/nortificatrions", controllers.NortificationController.GetAll)
-	e.GET("/nortificatrions/:id", controllers.NortificationController.GetOne)
-	e.PUT("/nortificatrions/:id", controllers.NortificationController.Update)
-	e.DELETE("/nortificatrions/:id", controllers.NortificationController.Delete)
+	JWTgroup.POST("/nortificatrions", controllers.NortificationController.Create)
+	JWTgroup.GET("/nortificatrions", controllers.NortificationController.GetAll)
+	JWTgroup.GET("/nortificatrions/:id", controllers.NortificationController.GetOne)
+	JWTgroup.PUT("/nortificatrions/:id", controllers.NortificationController.Update)
+	JWTgroup.DELETE("/nortificatrions/:id", controllers.NortificationController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////verify//////////////////////////////////
-	e.POST("/verify", controllers.VerifyController.Create)
-	e.GET("/verify", controllers.VerifyController.GetAll)
-	e.GET("/verify/:id", controllers.VerifyController.GetOne)
-	e.PUT("/verify/:id", controllers.VerifyController.Update)
-	e.DELETE("/verify/:id", controllers.VerifyController.Delete)
+	JWTgroup.POST("/verify", controllers.VerifyController.Create)
+	JWTgroup.GET("/verify", controllers.VerifyController.GetAll)
+	JWTgroup.GET("/verify/:id", controllers.VerifyController.GetOne)
+	JWTgroup.PUT("/verify/:id", controllers.VerifyController.Update)
+	JWTgroup.DELETE("/verify/:id", controllers.VerifyController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////invoice//////////////////////////////////
 	e.POST("/invoice", controllers.InvoiceController.Create)

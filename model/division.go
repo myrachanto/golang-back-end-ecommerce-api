@@ -1,8 +1,7 @@
 package model
 
-import(
-	"github.com/myrachanto/asokomonolith/httperrors"
-)
+
+import "github.com/myrachanto/ecommerce/httperrors"
 
 type Division struct {
 	Id string `bson:"_id"`

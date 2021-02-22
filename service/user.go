@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model" 
-	r "github.com/myrachanto/asokomonolith/repository"
+	"github.com/myrachanto/ecommerce/httperrors"
+	"github.com/myrachanto/ecommerce/model" 
+	r "github.com/myrachanto/ecommerce/repository"
 )
 
 var (
@@ -16,7 +16,6 @@ type userService struct {
 func (service userService) Create(user *model.User) (*httperrors.HttpError) {
 	err1 := r.Userrepository.Create(user)
 	 return err1
-
 }
 
 func (service userService) Login(auser *model.LoginUser) (*model.Auth, *httperrors.HttpError) {

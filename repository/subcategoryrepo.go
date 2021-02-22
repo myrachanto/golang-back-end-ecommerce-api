@@ -3,8 +3,8 @@ package repository
 import (
 	"fmt"
     "go.mongodb.org/mongo-driver/bson"
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model" 
+		"github.com/myrachanto/ecommerce/httperrors"
+		"github.com/myrachanto/ecommerce/model" 
 )
 var (
 	Subcategoryrepository subcategoryrepository = subcategoryrepository{}

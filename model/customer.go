@@ -2,7 +2,7 @@ package model
 
 import (
 	"time"
-	"github.com/myrachanto/asokomonolith/httperrors"
+	"github.com/myrachanto/ecommerce/httperrors"
 )
 
 type Customer struct {

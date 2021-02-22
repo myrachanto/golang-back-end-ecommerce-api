@@ -7,9 +7,10 @@ import (
 	"github.com/joho/godotenv"
 	jwt "github.com/dgrijalva/jwt-go"
     "go.mongodb.org/mongo-driver/bson"
-	"github.com/myrachanto/asokomonolith/httperrors"
-	"github.com/myrachanto/asokomonolith/model" 
+		"github.com/myrachanto/ecommerce/httperrors"
+		"github.com/myrachanto/ecommerce/model" 
 )
+//Userrepository repository
 var (
 	Userrepository userrepository = userrepository{}
 )
@@ -100,21 +101,23 @@ func (r *userrepository) Login(user *model.LoginUser) (*model.Auth, *httperrors.
 		fmt.Println(error)
 	}
 	auths := &model.Auth{UserID:auser.Id, Admin:auser.Admin, UName:auser.UName, Supervisor:auser.Supervisor,Employee:auser.Employee, Token:tokenString}
-
-	u, err3 := collection.InsertOne(ctx, auths)
+  //  fmt.Println(auths)
+	_, err3 := collection.InsertOne(ctx, auths)
 		if err3 != nil {
 			return nil,httperrors.NewBadRequestError(fmt.Sprintf("Create user Failed, %d", err))
 	}
 	
-	filter1 := bson.M{"_id": u.InsertedID}
-	auth := &model.Auth{}
-	collection2 := db.Collection("auth")
-	err4 := collection2.FindOne(ctx, filter1).Decode(&auth)
-	if err4 != nil {
-		return nil, httperrors.NewBadRequestError("something went wrong authorizing!")
-	}
+	// filter1 := bson.D{}
+	// auth := &model.Auth{}
+	// collection2 := db.Collection("auth")
+	// err4 := collection2.FindOne(ctx, filter1).Decode(&auth)
+	// fmt.Println(filter1)
+	// if err4 != nil {
+	// 	fmt.Println(err4)
+	// 	return nil, httperrors.NewBadRequestError("something went wrong authorizing!")
+	// }
 	DbClose(c)
-	return auth, nil
+	return auths, nil
 }
 func (r *userrepository) Logout(token string) (*httperrors.HttpSuccess, *httperrors.HttpError) {
 	c, t := Mongoclient();if t != nil {

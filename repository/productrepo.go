@@ -64,7 +64,7 @@ func (r *productrepository) GetAll(code string) ([]*model.Product, *httperrors.H
 	}
 	products := []*model.Product{}
 	collection := db.Collection("product")
-	filter := bson.M{"majorcat": code}
+	filter := bson.M{"category": code}
 	fmt.Println(filter)
 	cur, err := collection.Find(ctx, filter)
 	if err != nil { 

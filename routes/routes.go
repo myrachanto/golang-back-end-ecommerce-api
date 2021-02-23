@@ -125,9 +125,9 @@ func ApiMicroservice() {
 	////////////////////////////////////////////////////////
 	/////////////products//////////////////////////////////
 	JWTgroup.POST("/products", controllers.ProductController.Create)
-	JWTgroup.GET("/products/view/:code", controllers.ProductController.GetAll)
+	JWTgroup.GET("/products/view/:cat", controllers.ProductController.GetAll)
 	JWTgroup.GET("/products/:id", controllers.ProductController.GetOne)
-	JWTgroup.PUT("/products/:id", controllers.ProductController.Update)
+	JWTgroup.PUT("/products/:code", controllers.ProductController.Update)
 	JWTgroup.DELETE("/products/:id", controllers.ProductController.Delete)
 	////////////////////////////////////////////////////////
 	/////////////tags//////////////////////////////////

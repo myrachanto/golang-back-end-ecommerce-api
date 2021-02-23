@@ -1,7 +1,9 @@
 package controllers
 
 import(
-	//"fmt"	
+	"fmt"	
+	"os"
+	"io"
 	"net/http"
 	"github.com/labstack/echo"
 	"github.com/myrachanto/ecommerce/httperrors"
@@ -21,6 +23,44 @@ func (controller productController) Create(c echo.Context) error {
 	product.Description = c.FormValue("description")
 	product.Title = c.FormValue("title")
 	product.Category = c.FormValue("category")
+	product.Majorcategory = c.FormValue("majorcategory")
+
+	pic, err2 := c.FormFile("picture")
+			if pic != nil{
+		//    fmt.Println(pic.Filename)
+			if err2 != nil {
+				httperror := httperrors.NewBadRequestError("Invalid picture")
+				return c.JSON(httperror.Code, err2)
+			}	
+		src, err := pic.Open()
+		if err != nil {
+			httperror := httperrors.NewBadRequestError("the picture is corrupted")
+			return c.JSON(httperror.Code, err)
+		}	
+		defer src.Close()
+		filePath := "./public/imgs/products/" + pic.Filename
+		// Destination
+		dst, err4 := os.Create(filePath)
+		if err4 != nil {
+			httperror := httperrors.NewBadRequestError("the Directory mess")
+			return c.JSON(httperror.Code, err4)
+		}
+		defer dst.Close()
+		//  copy
+		if _, err = io.Copy(dst, src); err != nil {
+			if err2 != nil {
+				httperror := httperrors.NewBadRequestError("error filling")
+				return c.JSON(httperror.Code, httperror)
+			}
+		} 
+		
+		product.Picture = pic.Filename
+		err1 := service.ProductService.Create(product)
+		if err1 != nil {
+		return c.JSON(err1.Code, err1)
+		} 
+		return c.JSON(http.StatusCreated, "created successifuly")
+		}
 	err1 := service.ProductService.Create(product)
 	if err1 != nil {
 		return c.JSON(err1.Code, err1)
@@ -29,7 +69,7 @@ func (controller productController) Create(c echo.Context) error {
 }
 
 func (controller productController) GetAll(c echo.Context) error {
-	code := c.Param("code")
+	code := c.Param("cat")
 	products, err3 := service.ProductService.GetAll(code)
 	if err3 != nil {
 		return c.JSON(err3.Code, err3)
@@ -47,12 +87,55 @@ func (controller productController) GetOne(c echo.Context) error {
 
 func (controller productController) Update(c echo.Context) error {
 	product :=  &model.Product{}
-	if err := c.Bind(product); err != nil {
-		httperror := httperrors.NewBadRequestError("Invalid json body")
-		return c.JSON(httperror.Code, httperror)
-	}	
-	id := string(c.Param("id"))
-	problem := service.ProductService.Update(id, product)
+	product.Name = c.FormValue("name")
+	product.Description = c.FormValue("description")
+	product.Title = c.FormValue("title")
+	product.Category = c.FormValue("category")
+	product.Majorcategory = c.FormValue("majorcategory")
+
+	code := c.Param("code")
+	pcode := c.FormValue("pcode")
+	// fmt.Println(pcode, "sssssssssssssssssssssssssssssssssss")
+	pic, err2 := c.FormFile("picture")
+			if pic != nil{
+		//    fmt.Println(pic.Filename)
+			if err2 != nil {
+				httperror := httperrors.NewBadRequestError("Invalid picture")
+				return c.JSON(httperror.Code, err2)
+			}	
+		src, err := pic.Open()
+		if err != nil {
+			httperror := httperrors.NewBadRequestError("the picture is corrupted")
+			return c.JSON(httperror.Code, err)
+		}	
+		defer src.Close()
+		filePath := "./public/imgs/products/" + pic.Filename
+		// Destination
+		dst, err4 := os.Create(filePath)
+		if err4 != nil {
+			httperror := httperrors.NewBadRequestError("the Directory mess")
+			return c.JSON(httperror.Code, err4)
+		}
+		defer dst.Close()
+		//  copy
+		if _, err = io.Copy(dst, src); err != nil {
+			if err2 != nil {
+				httperror := httperrors.NewBadRequestError("error filling")
+				return c.JSON(httperror.Code, httperror)
+			}
+		} 
+		
+		product.Picture = pic.Filename
+		fmt.Println(product)
+		fmt.Println(code, "----==============================")
+
+		err1 := service.ProductService.Update(pcode,product)
+		if err1 != nil {
+		return c.JSON(err1.Code, err1)
+		} 
+		return c.JSON(http.StatusOK, "update successifuly")
+		}
+	problem := service.ProductService.Update(code, product)
 	if problem != nil {
 		return c.JSON(problem.Code, problem)
 	}

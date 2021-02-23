@@ -28,8 +28,8 @@ func (service productService) GetAll(code string) ([]*model.Product, *httperrors
 	return products, err
 }
 
-func (service productService) Update(id string, product *model.Product) (*httperrors.HttpError) {
-	err1 := r.Productrepository.Update(id, product)
+func (service productService) Update(code string, product *model.Product) (*httperrors.HttpError) {
+	err1 := r.Productrepository.Update(code, product)
 	return err1
 }
 func (service productService) Delete(id string) (*httperrors.HttpSuccess, *httperrors.HttpError) {
